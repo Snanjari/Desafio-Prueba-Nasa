@@ -1,0 +1,41 @@
+#api_nasa.py
+import requests
+import json 
+from typing import Dict, Optional
+
+url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=vBdWyRBIdbKQjVHWLgtaanQoyRJakXJ4zqXCvE51"
+
+payload= {}
+headers = {}
+
+response = requests.request("GET", url, headers = headers, data = payload)
+data = json.loads(response.text)["latest_photos"]
+
+def get_img(data):
+    img_list = []
+    for i in data:
+        for k, v in i.items():
+            if k == "img_src":
+                img_list.append(v)
+                #print(i)
+    return img_list[:25]
+
+build_web_page = """<html>
+        <head>
+        </head>
+        <body>
+        <ul>
+        """ 
+for i in get_img(data):
+    html += "<li><img src=" + i + "></li>"
+
+build_web_page:  += """</ul>
+        </body>
+        </head>
+        </html> 
+        """
+        
+
+
+print(build_web_page)
+print(get_img(data))
